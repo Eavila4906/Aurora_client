@@ -1,0 +1,16 @@
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    margin: 0; 
+}
+
+.logo {
+    background-image: url('../../../assets/img/logo.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+    margin-top: 40px;
+    width: 600px;
+    height: 300px; 
+}
