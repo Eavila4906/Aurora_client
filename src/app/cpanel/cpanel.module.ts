@@ -7,11 +7,13 @@ import { SharedModule } from '../shared/shared.module';
 
 import { CpanelComponent } from './cpanel.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { SalesComponent } from './sales/sales.component';
 
 @NgModule({
   declarations: [
     CpanelComponent,
-    DashboardComponent
+    DashboardComponent,
+    SalesComponent
   ],
   imports: [
     CommonModule,

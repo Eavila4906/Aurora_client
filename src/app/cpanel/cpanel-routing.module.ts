@@ -3,14 +3,18 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { CpanelComponent } from './cpanel.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { SalesComponent } from './sales/sales.component';
 
 const routes: Routes = [
   { path: 'principal', component: CpanelComponent,
     children: [
-      { path: '', component: DashboardComponent },
-      /*{ path: 'eventos', component: EventsComponent },
-      { path: 'sitio_web', component: WebsiteComponent },
-      { path: 'usuarios', component: UsersComponent }*/
+      { path: '', component: DashboardComponent }
+    ]
+  },
+
+  { path: 'mi_negocio', component: CpanelComponent,
+    children: [
+      { path: 'ventas', component: SalesComponent }
     ]
   },
 ];
