@@ -1,0 +1,211 @@
+<div class="mb-3" *ngIf="permission_read">
+    <h1 class="h3 d-inline align-middle">Cobros </h1>
+    <button class="btn btn-success" (click)="openModalChargeSetting()" *ngIf="permission_create">
+        <i class="fas fa-cog"></i>
+    </button>
+</div>
+
+<div class="row" *ngIf="permission_read">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-md-9">
+                        <!--<button class="btn btn-danger" title="Descargar pdf" (click)="rptRolesList(1)"
+                            *ngIf="generate_reports">
+                            <i class="fas fa-file-pdf"></i>
+                        </button>
+                        <button class="ms-1 btn btn-primary" title="Imprimir" (click)="rptRolesList(2)"
+                            *ngIf="generate_reports">
+                            <i class="fas fa-print"></i>
+                        </button>-->
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control" type="search" placeholder="Buscar" (input)="Search()"
+                            [(ngModel)]="search">
+                    </div>
+                </div>
+                <div>
+                    <p> {{ countRangeRegister() }} </p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Representante</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let rep of representatives | paginate: { itemsPerPage: recordPerPage, currentPage: currentPage }">
+                                <td>{{ rep.id }}</td>
+                                <td>{{ rep.representative }}</td>
+                                <td>{{ rep.date }}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" title="Registrar cobro"
+                                        (click)="charge(rep.id)">
+                                        <i class="fas fa-cash-register"></i>
+                                    </button>
+                                    <button class="ms-1 btn btn-primary btn-sm" title="Registar abono"
+                                        (click)="openModalChargePartial(rep.id)">
+                                        <i class="fas fa-hand-holding-usd"></i>
+                                    </button>
+                                    <button class="ms-1 btn btn-danger btn-sm" title="Registar deuda">
+                                        <i class="fas fa-handshake"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3 pagination">
+                        <pagination-controls (pageChange)="currentPage=$event"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal to charge setting-->
+<div bsModal #ModalChargeSetting="bs-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h3 class="modal-title text-white fs-2 fw-bolder"><i class="fas fa-cog"></i> Configuración</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    (click)="ModalChargeSetting.hide();"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="form" class="form-horizontal">
+                    <p class="text-success">
+                        Los campos con asterisco (*) son obligatorios.
+                    </p>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label>Frecuencia de cobro *</label>
+                            <select class="form-control" name="frequency" [(ngModel)]="frequency" required>
+                                <option value="" selected class="d-none">Seleccionar</option>
+                                <option *ngFor="let fre of frequency" value={{fre.id}}>{{fre.frequency}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labelForm">Costo *</label>
+                            <input class="form-control" type="text" name="cost" [(ngModel)]="cost" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-danger" (click)="ModalChargeSetting.hide()">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal to charge partial-->
+<div bsModal #ModalChargePartial="bs-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h3 class="modal-title text-white fs-2 fw-bolder"><i class="fas fa-hand-holding-usd"></i> Abonar</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    (click)="ModalChargePartial.hide();"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="form" class="form-horizontal">
+                    <p class="text-primary">
+                        Los campos con asterisco (*) son obligatorios.
+                    </p>
+                    <h5>¿Cuanto es el valor que deseas abonar?</h5>
+                    <div class="form-group mb-4">
+                        <input class="form-control" type="text" name="valuePartialPayment" 
+                            [(ngModel)]="valuePartialPayment" required (input)="calculateRemainingBalance(valuePartialPayment)">
+                    </div>
+
+                    <span class="mb-4">{{resultPartialPayment}}</span>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-danger" (click)="ModalChargePartial.hide()">Cerrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal to view role information-->
+<div bsModal #ModalProofPayment="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+    data-keyboard="false" data-backdrop="static" (click)="stopPropagation($event)">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <button class="btn btn-danger" title="Descargar pdf">
+                    <i class="fas fa-file-pdf"></i>
+                </button>
+                <button class="ms-1 btn btn-primary" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    (click)="ModalProofPayment.hide()"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="proof">
+                    <h2>Comprobante de Pago</h2>
+                    <div class="data">
+                        <p><strong>Fecha:</strong> 21 de febrero de 2024</p>
+                        <p><strong>Número de Recibo:</strong> 00123</p>
+                        <p><strong>Nombre del Cliente:</strong> Juan Pérez</p>
+                        <p><strong>Dirección:</strong> Calle Principal, Ciudad</p>
+                    </div>
+                    <table class="table-proof">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Servicio de transporte</td>
+                                <td>1</td>
+                                <td>$10.00</td>
+                                <td>$10.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3">Total a Pagar</th>
+                                <td>$10.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <br>
+                    <p><strong>¡Gracias por preferirnos!</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="permission_read == false">
+    <div class="alert alert-danger" role="alert">
+        Access denied! You do not have the necessary permissions to view this module.
+    </div>
+</div>

@@ -1,0 +1,36 @@
+.proof {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.proof h2 {
+    text-align: center;
+}
+
+.data {
+    margin-bottom: 20px;
+}
+
+.data p {
+    margin: 5px 0;
+}
+
+.table-proof {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-proof th,
+.table-proof td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table-proof th {
+    background-color: #f2f2f2;
+}
