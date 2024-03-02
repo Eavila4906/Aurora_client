@@ -1,0 +1,401 @@
+<div class="mb-3" *ngIf="permission_read">
+  <div>
+    <h1 class="h3 d-inline align-middle">Lista de usuarios </h1>
+    <button class="btn btn-success" (click)="openModalCreateUser()" *ngIf="permission_create && permission_read">
+      Registrar
+      <i class="fas fa-user-plus"></i>
+    </button>
+  </div>
+</div>
+
+<div class="row" *ngIf="permission_read">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row mb-2">
+          <div class="col-md-9">
+            <!--<button class="btn btn-danger" title="Descargar pdf"
+                (click)="rptUsersList(1)" *ngIf="generate_reports">
+                <i class="fas fa-file-pdf"></i>
+              </button>
+              <button class="ms-1 btn btn-primary" title="Imprimir"
+                (click)="rptUsersList(2)" *ngIf="generate_reports">
+                <i class="fas fa-print"></i>
+              </button>-->
+          </div>
+          <div class="col-md-3">
+            <input class="form-control" type="search" placeholder="Buscar" (input)="Search()" [(ngModel)]="search">
+          </div>
+        </div>
+        <div>
+          <p> {{ countRangeRegister() }} </p>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Usuario</th>
+                <th>Correo electrónico</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let user of usersFilter | paginate: { itemsPerPage: recordPerPage, currentPage: currentPage }">
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.rolesList }}</td>
+                <td>
+                  <span *ngIf="user.status == 1">
+                    {{ user.r_status }} <i class="fas fa-circle fa-sm text-success"></i>
+                  </span>
+                  <span *ngIf="user.status != 1">
+                    {{ user.r_status }} <i class="fas fa-circle fa-sm text-danger"></i>
+                  </span>
+                </td>
+                <td>
+                  <span *ngIf="user.id != 1; else elseBlock">
+                    <button class="btn btn-success btn-sm" title="Agregar roles" (click)="openModalAssignRol(user.id)"
+                      *ngIf="permission_create && permission_update">
+                      <i class="fas fa-user-tag"></i>
+                    </button>
+
+                    <button class="ms-1 btn btn-info btn-sm" title="Ver" (click)="viewUserInformation(user.id)"
+                      *ngIf="permission_read">
+                      <i class="fas fa-eye"></i>
+                    </button>
+
+                    <span *ngIf="user_log == 2 && user.username == username_log ; else elseBlockAd">
+                      <button class="ms-1 btn btn-secondary btn-sm" title="Actualizar" *ngIf="permission_update"
+                        disabled>
+                        <i class="fas fa-pencil"></i>
+                      </button>
+
+                      <button class="ms-1 btn btn-secondary btn-sm" title="Eliminar" *ngIf="permission_delete" disabled>
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </span>
+                    <ng-template #elseBlockAd>
+                      <button class="ms-1 btn btn-primary btn-sm" title="Actualizar"
+                        (click)="openModalUpdateUser(user.id)" *ngIf="permission_update">
+                        <i class="fas fa-pencil"></i>
+                      </button>
+
+                      <button class="ms-1 btn btn-danger btn-sm" title="Eliminar" (click)="deleteUser(user.id)"
+                        *ngIf="permission_delete">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </ng-template>
+                  </span>
+                  <ng-template #elseBlock>
+                    <button class="btn btn-info btn-sm" title="Ver" (click)="viewUserInformation(user.id)"
+                      *ngIf="permission_read">
+                      <i class="fas fa-eye"></i>
+                    </button>
+
+                    <button class="ms-1 btn btn-secondary btn-sm" title="Agregar roles"
+                      *ngIf="permission_create && permission_update" disabled>
+                      <i class="fas fa-user-tag"></i>
+                    </button>
+
+                    <button class="ms-1 btn btn-secondary btn-sm" title="Actualizar" *ngIf="permission_update" disabled>
+                      <i class="fas fa-pencil"></i>
+                    </button>
+
+                    <button class="ms-1 btn btn-secondary btn-sm" title="Eliminar" *ngIf="permission_delete" disabled>
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-md-9"></div>
+          <div class="col-md-3 pagination">
+            <pagination-controls (pageChange)="currentPage=$event"></pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal to create users-->
+<div bsModal #ModalCreateUser="bs-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h3 class="modal-title text-white fs-2 fw-bolder"><i class="fas fa-user-plus"></i> Nuevo usuario</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="ModalCreateUser.hide()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="form-CreateUser" class="form-horizontal" (submit)="createUser()">
+          <p class="text-success">
+            Los campos con asterisco (*) son obligatorios.
+          </p>
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <label id="labelNames" class="labelForm">Nombres *</label>
+              <input class="form-control" type="text" name="name" [(ngModel)]="newUser.name" required>
+            </div>
+            <div class="col-md-6">
+              <label id="labelLastName" class="labelForm">Apellidos *</label>
+              <input class="form-control" type="text" name="lastname" [(ngModel)]="newUser.lastname" required>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="form-group">
+              <label id="labelEmail" class="labelForm">Correo electrónico *</label>
+              <input class="form-control" type="email" name="email" [(ngModel)]="newUser.email" required>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <label>Selecciona un rol *</label>
+              <select class="form-control" name="roleId" [(ngModel)]="newUser.roleId" required>
+                <option value="" selected class="d-none">Selecciona un rol</option>
+                <option *ngFor="let rol2 of roles_fv" value={{rol2.id}}>{{rol2.rol}}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label>Estado *</label>
+              <select class="form-control" name="status" [(ngModel)]="newUser.status" required>
+                <option value="1">Activo</option>
+                <option value="2">Inactivo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <button type="button" class="btn btn-danger" (click)="resetForm(); ModalCreateUser.hide()">Cerrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal to update user-->
+<div bsModal #ModalUpdateUser="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+  data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h3 class="modal-title text-white fs-2 fw-bolder"><i class="fas fa-user-edit"></i> Actualizar usuario</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="ModalUpdateUser.hide()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="form-UpdateUser" class="form-horizontal" (submit)="updateUser()">
+          <p class="text-primary">
+            Los campos con asterisco (*) son obligatorios.
+          </p>
+
+          <input type="hidden" name="id" [(ngModel)]="id" value={{id}}>
+
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <label id="labelNames" class="labelForm">Nombres *</label>
+              <input class="form-control" type="text" name="name" [(ngModel)]="name" value={{name}} required>
+            </div>
+            <div class="col-md-6">
+              <label id="labelLastName" class="labelForm">Apellidos *</label>
+              <input class="form-control" type="text" name="lastname" [(ngModel)]="lastname" value={{lastname}} required>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label id="labelEmail" class="labelForm">Correo electrónico *</label>
+                <input class="form-control" type="email" name="email" [(ngModel)]="email" value={{email}} required>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label>Estado *</label>
+              <select class="form-control" name="status" [(ngModel)]="status" required>
+                <option class="d-none" value={{status}} selected>
+                  <span *ngIf="status == 1">
+                    Activo
+                  </span>
+                  <span *ngIf="status != 1">
+                    Inactivo
+                  </span>
+                </option>
+                <option value="1">Activo</option>
+                <option value="2">Inactivo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+            <button type="button" class="btn btn-danger" (click)="ModalUpdateUser.hide()">Cerrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal to view user information-->
+<div bsModal #ModalViewUserInformation="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+  data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h3 class="modal-title text-white fs-2 fw-bolder"><i class="fas fa-user-alt"></i> Información del usuario</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+          (click)="ModalViewUserInformation.hide()"></button>
+      </div>
+
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td style="width: 200px"><b>Id</b></td>
+              <td>{{id}}</td>
+            </tr>
+            <tr>
+              <td style="width: 200px"><b>Nombres</b></td>
+              <td>{{name}}</td>
+            </tr>
+            <tr>
+              <td style="width: 200px"><b>Apellidos</b></td>
+              <td>{{lastname}}</td>
+            </tr>
+            <tr>
+              <td style="width: 200px"><b>Nombre de usuario</b></td>
+              <td>{{username}}</td>
+            </tr>
+            <tr>
+              <td style="width: 200px"><b>Correo electrónico</b></td>
+              <td>{{email}}</td>
+            </tr>
+            <tr>
+              <td style="width: 200px"><b>Rol</b></td>
+              <td>{{rol}}</td>
+            </tr>
+            <tr id="tr-file">
+              <td style="width: 200px"><b>Estado</b></td>
+              <td>
+                <span *ngIf="status == 1">
+                  Activo <i class="fas fa-circle fa-sm text-success"></i>
+                </span>
+                <span *ngIf="status != 1">
+                  Inactivo <i class="fas fa-circle fa-sm text-danger"></i>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="ModalViewUserInformation.hide()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal to assign rol-->
+<div bsModal #ModalAssignRol="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
+  data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h3 class="modal-title text-white fs-2 fw-bolder"><i class="fas fa-user-alt"></i> Asignar rol</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="ModalAssignRol.hide()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="form-userroles" (submit)="AssignRol()">
+          <input type="hidden" name="user" value={{id}}>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Nº</th>
+                  <th>Rol</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rol of roles; let i = index">
+                  <td>
+                    {{rol.id}}
+                    <input type="hidden" name="rol[{{i}}][id]" value={{rol.id}}>
+                  </td>
+
+                  <td>
+                    {{rol.rol}}
+                  </td>
+
+                  <td *ngIf="rol.id != 1 ; else elseBlockRol">
+                    <span *ngIf="rol.userRole['status'] == 1">
+                      <div class="form-check form-switch">
+                        <label>
+                          <input class="form-check-input" type="checkbox" name="rol[{{i}}][status]" checked>
+                          <span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
+                        </label>
+                      </div>
+                    </span>
+                    <span *ngIf="rol.userRole['status'] != 1">
+                      <div class="form-check form-switch">
+                        <label>
+                          <input class="form-check-input" type="checkbox" name="rol[{{i}}][status]">
+                          <span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
+                        </label>
+                      </div>
+                    </span>
+                  </td>
+                  <ng-template #elseBlockRol>
+                    <td>
+                      <span *ngIf="rol.userRole['status'] == 1">
+                        <div class="form-check form-switch">
+                          <label>
+                            <input class="form-check-input" type="checkbox" name="rol[{{i}}][status]" checked disabled>
+                            <span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
+                          </label>
+                        </div>
+                      </span>
+                      <span *ngIf="rol.userRole['status'] != 1">
+                        <div class="form-check form-switch">
+                          <label>
+                            <input class="form-check-input" type="checkbox" name="rol[{{i}}][status]" disabled>
+                            <span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
+                          </label>
+                        </div>
+                      </span>
+                    </td>
+                  </ng-template>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Confirmar</button>
+            <button type="button" class="btn btn-danger" (click)="ModalAssignRol.hide()">Cerrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="permission_read == false">
+  <div class="alert alert-danger" role="alert">
+    Access denied! You do not have the necessary permissions to view this module.
+  </div>
+</div>
