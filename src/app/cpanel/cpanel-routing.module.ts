@@ -10,6 +10,12 @@ import { ReportsComponent } from './reports/reports.component';
 import { CustomersComponent } from './customers/customers.component';
 import { SuppliersComponent } from './suppliers/suppliers.component';
 import { SettingsComponent } from './settings/settings.component';
+import { RolesComponent } from './roles/roles.component';
+import { UsersComponent } from './users/users.component';
+import { ChargeComponent } from './myTransportation/charge/charge.component';
+import { ReportsMtComponent } from './myTransportation/reports-mt/reports-mt.component';
+import { VehiclesComponent } from './myTransportation/vehicles/vehicles.component';
+import { StudentsComponent } from './myTransportation/students/students.component';
 
 const routes: Routes = [
   { 
@@ -31,9 +37,21 @@ const routes: Routes = [
     ]
   },
 
+  { 
+    path: 'mi_transporte', component: CpanelComponent,
+    children: [
+      { path: 'cobrar', component: ChargeComponent },
+      { path: 'reportes', component: ReportsMtComponent },
+      { path: 'vehiculo', component: VehiclesComponent },
+      { path: 'estudiantes', component: StudentsComponent }
+    ]
+  },
+
   {
     path: 'sistema', component: CpanelComponent,
     children: [
+      { path: 'roles&permisos', component: RolesComponent },
+      { path: 'usuarios', component: UsersComponent },
       { path: 'configuraciones', component: SettingsComponent }
     ]
   }
