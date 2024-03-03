@@ -11,13 +11,13 @@
                 </a>
 
                 <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                    <span class="text-dark">Carlos Josel Mendoza Galvan</span>
+                    <span class="text-dark">{{username}}</span>
                     <br>
-                    <small id="rol">Gerente</small>
+                    <small>{{rol}}</small>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item">
+                    <a class="dropdown-item" (click)="logout()">
                         <i class="fas fa-sign-out"></i> Cerrar sesión
                     </a>
                 </div>
