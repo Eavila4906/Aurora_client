@@ -13,65 +13,116 @@
             </li>
 
             <li id="dashboard-item" class="sidebar-item">
-                <a class="sidebar-link" href="/principal">
+                <a class="sidebar-link" href="/principal" *ngIf="module_dashboard">
                     <i class="fas fa-grip-horizontal"></i>
                     <span class="align-middle">Principal</span>
                 </a>
             </li>
 
-           
-            <li class="sidebar-header">
+            <!--SECTION MY BUSINESS-->
+
+            <li class="sidebar-header" *ngIf="section_myBusiness">
                 Mi negocio 
             </li>
 
             <li id="sales-item" class="sidebar-item">
-                <a class="sidebar-link" href="mi_negocio/ventas">
+                <a class="sidebar-link" href="mi_negocio/ventas" *ngIf="section_myBusiness">
                     <i class="fas fa-store"></i>
                     <span class="align-middle">Ventas</span>
                 </a>
             </li>
 
             <li id="accounts-payable-item" class="sidebar-item">
-                <a class="sidebar-link" href="mi_negocio/cuentas_por_pagar">
+                <a class="sidebar-link" href="mi_negocio/cuentas_por_pagar" *ngIf="section_myBusiness">
                     <i class="fas fa-hand-holding-usd"></i>
                     <span class="align-middle">Cuentas por pagar</span>
                 </a>
             </li>
 
             <li id="accounts-receivable-item" class="sidebar-item">
-                <a class="sidebar-link" href="mi_negocio/cuentas_por_cobrar">
+                <a class="sidebar-link" href="mi_negocio/cuentas_por_cobrar" *ngIf="section_myBusiness">
                     <i class="fas fa-dollar-sign"></i>
                     <span class="align-middle">Cuentas por cobrar</span>
                 </a>
             </li>
 
             <li id="reports-item" class="sidebar-item">
-                <a class="sidebar-link" href="mi_negocio/reportes">
+                <a class="sidebar-link" href="mi_negocio/reportes" *ngIf="section_myBusiness">
                     <i class="fas fa-calculator"></i>
                     <span class="align-middle">Reportes</span>
                 </a>
             </li>
 
             <li id="customers-item" class="sidebar-item">
-                <a class="sidebar-link" href="mi_negocio/clientes">
+                <a class="sidebar-link" href="mi_negocio/clientes" *ngIf="section_myBusiness">
                     <i class="fas fa-user-friends"></i>
                     <span class="align-middle">Clientes</span>
                 </a>
             </li>
 
             <li id="suppliers-item" class="sidebar-item">
-                <a class="sidebar-link" href="mi_negocio/proovedores">
+                <a class="sidebar-link" href="mi_negocio/proovedores" *ngIf="section_myBusiness">
                     <i class="fas fa-parachute-box"></i>
                     <span class="align-middle">Proovedores</span>
                 </a>
             </li>
 
+            <!--SECTION MY TRANSPORTATIONS-->
+
+            <li class="sidebar-header" *ngIf="section_myTransportation">
+                Mi transporte
+            </li>
+
+            <li id="charge-item" class="sidebar-item">
+                <a class="sidebar-link" href="mi_transporte/cobrar" *ngIf="section_myTransportation">
+                    <i class="fas fa-cash-register"></i>
+                    <span class="align-middle">Cobrar</span>
+                </a>
+            </li>
+
+            <li id="reportsMT-item" class="sidebar-item">
+                <a class="sidebar-link" href="mi_transporte/reportes" *ngIf="section_myTransportation">
+                    <i class="fas fa-clipboard"></i>
+                    <span class="align-middle">Reportes</span>
+                </a>
+            </li>
+
+            <li id="vehicle-item" class="sidebar-item">
+                <a class="sidebar-link" href="mi_transporte/vehiculo" *ngIf="section_myTransportation">
+                    <i class="fas fa-shuttle-van"></i>
+                    <span class="align-middle">Vehiculos</span>
+                </a>
+            </li>
+
+            <li id="students-item" class="sidebar-item">
+                <a class="sidebar-link" href="mi_transporte/estudiantes" *ngIf="section_myTransportation">
+                    <i class="fas fa-user-friends"></i>
+                    <span class="align-middle">Estudiantes</span>
+                </a>
+            </li>
+
+            <!--SECTION SYSTEM-->
+
             <li class="sidebar-header">
-               Sistema   
+                Sistema
+            </li>
+
+            <li id="roles-item" class="sidebar-item">
+                <a class="sidebar-link" href="sistema/roles&permisos" *ngIf="module_roles">
+                    <i class="fa-solid fa-user-tag"></i>
+                    <span class="align-middle">Roles & permisos</span>
+                </a>
+            </li>
+
+            <li id="users-item" class="sidebar-item">
+                <a class="sidebar-link" href="sistema/usuarios" *ngIf="module_users">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="align-middle">Usuarios</span>
+                </a>
             </li>
 
             <li id="settings-item" class="sidebar-item">
-                <a class="sidebar-link" href="sistema/configuraciones">
+                <a class="sidebar-link" href="sistema/configuraciones" *ngIf="module_settings">
                     <i class="fas fa-cog"></i>
                     <span class="align-middle">Configuraciones</span>
                 </a>
