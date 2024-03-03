@@ -10,7 +10,7 @@
                         <div class="card" style="border-radius: 1rem;">
                             <div class="row g-0">
                                 <div class="card-body py-5 px-4 p-md-5">
-                                    <form id="form-login">
+                                    <form id="form-login" (submit)="login()">
                                         <h4 class="mb-4 title-login">
                                             Ingresar al sistema
                                         </h4>
@@ -26,7 +26,8 @@
                                         </div>
 
                                         <div>
-                                            <button class="btn btn-login btn-rounded" type="submit">
+                                            <button class="btn btn-login btn-rounded" 
+                                                type="submit">
                                                 Iniciar sesion
                                             </button>
                                         </div>
