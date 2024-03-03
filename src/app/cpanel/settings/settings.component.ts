@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AppService } from 'src/app/services/app.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -8,7 +9,9 @@ import { AppService } from 'src/app/services/app.service';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  constructor (private AppService: AppService) { 
+
+  constructor (private AppService: AppService, private AuthService: AuthService) { 
+    this.AuthService.loginFalse();
     this.AppService.sidebar('settings-item');
   }
 
